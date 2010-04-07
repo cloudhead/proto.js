@@ -26,12 +26,11 @@ Object.typeOf = function (value) {
 //
 // Type equality functions
 //
-Object.is   = function (o) { return Object.typeOf(o) === 'object' };
-String.is   = function (o) { return Object.typeOf(o) === 'string' };
-Function.is = function (o) { return Object.typeOf(o) === 'function' };
-Array.is    = function (o) { return Object.typeOf(o) === 'array' };
-RegExp.is   = function (o) { return Object.typeOf(o) === 'regexp' };
-Boolean.is  = function (o) { return Object.typeOf(o) === 'boolean' };
+Object.isObject     = function (o) { return Object.typeOf(o) === 'object' };
+String.isString     = function (o) { return Object.typeOf(o) === 'string' };
+Function.isFunction = function (o) { return Object.typeOf(o) === 'function' };
+RegExp.isRegExp     = function (o) { return Object.typeOf(o) === 'regexp' };
+Boolean.isBoolean   = function (o) { return Object.typeOf(o) === 'boolean' };
 
 //
 // Object
@@ -44,6 +43,18 @@ Object.forEach = function (obj, fun) {
 };
 Object.isEmpty = function (obj) {
     return Object.keys(obj).length === 0;
+};
+
+Object.mixin = function (target) {
+    var args = Array.prototype.slice.call(arguments, 1);
+    
+    args.forEach(function (a) {
+        var keys = Object.keys(a);
+        for (var i = 0; i < keys.length; i++) {
+            target[keys[i]] = a[keys[i]];
+        }
+    });
+    return target;
 };
 
 //
@@ -86,14 +97,14 @@ String.prototype.capitalize = function () {
 
 String.prototype.stylize = function (style) {
     var styles = {
-        'bold'      : [1,  22],
-        'underline' : [4,  24],
-        'inverse'   : [7,  27],
-        'cyan'      : [36, 39],
-        'magenta'   : [35, 39],
-        'yellow'    : [33, 39],
-        'green'     : [32, 39],
-        'red'       : [31, 39]
+        bold      : [1,  22],
+        underline : [4,  24],
+        inverse   : [7,  27],
+        cyan      : [36, 39],
+        magenta   : [35, 39],
+        yellow    : [33, 39],
+        green     : [32, 39],
+        red       : [31, 39]
     };
     return '\033[' + styles[style][0] + 'm' + this +
            '\033[' + styles[style][1] + 'm';
